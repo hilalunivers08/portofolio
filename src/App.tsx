@@ -1,3 +1,4 @@
+import { useEffect, useRef } from "react";
 import falcon from "./assets/millenniumfalcon.png";
 
 type Star = {
@@ -57,7 +58,78 @@ const stars: Star[] = [
   { top: "72%", left: "96%", size: 9, rotate: -20, delay: "1.0s", duration: "4.1s" },
 ];
 
+const projects = [
+  {
+    number: "01",
+    title: "Orbit",
+    category: "Web App",
+    year: "2026",
+    description:
+      "A fast, responsive dashboard that turns complex data into a clear, glanceable experience.",
+    tags: ["React", "TypeScript", "CSS"],
+  },
+  {
+    number: "02",
+    title: "Nebula",
+    category: "Design System",
+    year: "2025",
+    description:
+      "A small component library built to keep interfaces consistent, accessible, and easy to theme.",
+    tags: ["Figma", "Accessibility"],
+  },
+  {
+    number: "03",
+    title: "Signal",
+    category: "Experiment",
+    year: "2025",
+    description:
+      "An exploration of motion and micro-interactions on the web, one tiny animation at a time.",
+    tags: ["Animation", "Canvas"],
+  },
+];
+
 function App() {
+  const falconRef = useRef<HTMLDivElement>(null);
+
+  useEffect(() => {
+    let frame = 0;
+
+    const update = () => {
+      frame = 0;
+
+      const el = falconRef.current;
+      if (!el) return;
+
+      const travel = window.innerHeight * 0.7;
+      const progress = Math.min(1, Math.max(0, window.scrollY / travel));
+      const eased = progress * progress * (3 - 2 * progress);
+
+      const x = eased * window.innerWidth * 0.85;
+      const y = eased * window.innerHeight * 1.3;
+      const rotate = -4 + eased * 40;
+      const scale = 1 - eased * 0.35;
+      const opacity = 1 - eased * eased * eased;
+
+      el.style.transform = `translate3d(${x}px, ${y}px, 0) rotate(${rotate}deg) scale(${scale})`;
+      el.style.opacity = `${opacity}`;
+    };
+
+    const onScroll = () => {
+      if (frame) return;
+      frame = window.requestAnimationFrame(update);
+    };
+
+    update();
+    window.addEventListener("scroll", onScroll, { passive: true });
+    window.addEventListener("resize", onScroll);
+
+    return () => {
+      window.removeEventListener("scroll", onScroll);
+      window.removeEventListener("resize", onScroll);
+      if (frame) window.cancelAnimationFrame(frame);
+    };
+  }, []);
+
   return (
     <main className="site-canvas">
       <div className="starfield" aria-hidden="true">
@@ -81,12 +153,107 @@ function App() {
         })}
       </div>
 
-      <img
-        className="falcon"
-        src={falcon}
-        alt="Millennium Falcon"
-        draggable={false}
-      />
+      <div className="scene">
+        <div className="falcon-slot">
+          <div className="falcon-scroll" ref={falconRef}>
+            <img
+              className="falcon"
+              src={falcon}
+              alt="Millennium Falcon"
+              draggable={false}
+            />
+          </div>
+        </div>
+
+        <section className="portfolio">
+          <p className="portfolio-eyebrow">Portfolio — 2026</p>
+
+          <h1 className="portfolio-title">
+            Hi, I&apos;m Hilal.
+            <br />
+            <em>I build things for the web.</em>
+          </h1>
+
+          <p className="portfolio-text">
+            A personal collection of projects, experiments, and ideas shaped by
+            curiosity. This is where I document the things I create and learn.
+          </p>
+        </section>
+      </div>
+
+      <div className="portfolio-content">
+        <section className="content-section work" id="work">
+          <header className="section-head">
+            <div>
+              <p className="section-eyebrow">Selected Work</p>
+              <h2 className="section-title">
+                Projects I&apos;ve <em>built.</em>
+              </h2>
+            </div>
+
+            <p className="section-intro">
+              A small collection of projects and experiments — each one a step
+              further into building things that feel good to use.
+            </p>
+          </header>
+
+          <div className="project-grid">
+            {projects.map((project) => (
+              <article className="project-card" key={project.number}>
+                <div className="project-card-top">
+                  <span className="project-number">{project.number}</span>
+                  <span className="project-year">{project.year}</span>
+                </div>
+
+                <p className="project-category">{project.category}</p>
+                <h3 className="project-title">{project.title}</h3>
+                <p className="project-description">{project.description}</p>
+
+                <div className="project-tags">
+                  {project.tags.map((tag) => (
+                    <span key={tag}>{tag}</span>
+                  ))}
+                </div>
+
+                <a className="project-link" href="#contact">
+                  View project <span aria-hidden="true">↗</span>
+                </a>
+              </article>
+            ))}
+          </div>
+        </section>
+
+        <section className="content-section about" id="about">
+          <p className="section-eyebrow">About</p>
+          <h2 className="section-title">
+            Curious about technology,
+            <br />
+            <em>driven by ideas.</em>
+          </h2>
+          <p className="about-text">
+            I enjoy exploring technology, building digital experiences, and
+            turning ideas into something useful. This is where I document the
+            things I create and learn along the way.
+          </p>
+        </section>
+
+        <footer className="content-section site-footer" id="contact">
+          <p className="section-eyebrow">Get in touch</p>
+          <h2 className="section-title">
+            Let&apos;s make something <em>meaningful.</em>
+          </h2>
+
+          <a className="contact-link" href="mailto:hello@example.com">
+            hello@example.com <span aria-hidden="true">↗</span>
+          </a>
+
+          <div className="footer-bottom">
+            <span>© 2026 Hilal</span>
+            <span>Designed with intention.</span>
+            <span>End of page</span>
+          </div>
+        </footer>
+      </div>
     </main>
   );
 }
