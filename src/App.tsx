@@ -55,45 +55,28 @@ const stars: Star[] = [
   { top: "72%", left: "96%", size: 9, rotate: -20, delay: "1.0s", duration: "4.1s" },
 ];
 
-function StarShape({ size, rotate }: { size: number; rotate: number }) {
-  return (
-    <svg
-      className="star"
-      viewBox="0 0 100 100"
-      width={size}
-      height={size}
-      style={{ transform: `rotate(${rotate}deg)` }}
-      aria-hidden="true"
-    >
-      <path
-        d="M50 6 L61.8 38.2 L96.6 38.2 L68.5 58.6 L79.4 92 L50 71.6 L20.6 92 L31.5 58.6 L3.4 38.2 L38.2 38.2 Z"
-        fill="#ffdf7e"
-        stroke="#ffdf7e"
-        strokeWidth="13"
-        strokeLinejoin="round"
-      />
-    </svg>
-  );
-}
-
 function App() {
   return (
     <main className="site-canvas">
       <div className="starfield" aria-hidden="true">
-        {stars.map((star, index) => (
-          <span
-            key={index}
-            className="star-wrap"
-            style={{
-              top: star.top,
-              left: star.left,
-              animationDelay: star.delay,
-              animationDuration: star.duration,
-            }}
-          >
-            <StarShape size={star.size} rotate={star.rotate} />
-          </span>
-        ))}
+        {stars.map((star, index) => {
+          const dotSize = Math.max(2, Math.round(star.size / 5));
+
+          return (
+            <span
+              key={index}
+              className="star-dot"
+              style={{
+                top: star.top,
+                left: star.left,
+                width: `${dotSize}px`,
+                height: `${dotSize}px`,
+                animationDelay: star.delay,
+                animationDuration: star.duration,
+              }}
+            />
+          );
+        })}
       </div>
     </main>
   );
