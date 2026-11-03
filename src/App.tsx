@@ -1,3 +1,5 @@
+import falcon from "./assets/millenniumfalcon.png";
+
 type Star = {
   top: string;
   left: string;
@@ -78,6 +80,13 @@ function App() {
           );
         })}
       </div>
+
+      <img
+        className="falcon"
+        src={falcon}
+        alt="Millennium Falcon"
+        draggable={false}
+      />
     </main>
   );
 }
