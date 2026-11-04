@@ -1,5 +1,5 @@
 import { useEffect, useRef, useState } from "react";
-import falcon from "./assets/millenniumfalcon.png";
+import falcon from "./assets/millenniumfalcon.webp";
 
 type Star = {
   top: string;
