@@ -59,7 +59,10 @@ a {
   display: block;
   border-radius: 50%;
   background: #ffffff;
-  box-shadow: 0 0 3px rgba(255, 255, 255, 0.7);
+  box-shadow:
+    0 0 4px rgba(255, 255, 255, 0.95),
+    0 0 10px rgba(174, 204, 255, 0.75),
+    0 0 22px rgba(120, 165, 255, 0.45);
   transform: translate(-50%, -50%);
   animation-name: twinkle;
   animation-timing-function: ease-in-out;
@@ -69,10 +72,18 @@ a {
 @keyframes twinkle {
   0%,
   100% {
-    opacity: 0.3;
+    opacity: 0.4;
+    box-shadow:
+      0 0 3px rgba(255, 255, 255, 0.8),
+      0 0 8px rgba(174, 204, 255, 0.55),
+      0 0 16px rgba(120, 165, 255, 0.3);
   }
   50% {
     opacity: 1;
+    box-shadow:
+      0 0 5px rgba(255, 255, 255, 1),
+      0 0 14px rgba(174, 204, 255, 0.9),
+      0 0 30px rgba(120, 165, 255, 0.6);
   }
 }
 
@@ -174,12 +185,7 @@ a {
   position: relative;
   z-index: 1;
   padding-bottom: 40px;
-  background: linear-gradient(
-    180deg,
-    rgba(0, 0, 0, 0) 0,
-    rgba(0, 0, 0, 0.92) 140px,
-    #000000 340px
-  );
+  background: transparent;
 }
 
 .content-section {
@@ -213,114 +219,87 @@ a {
   color: #a9a49b;
 }
 
-/* ---------- Project cards ---------- */
+/* ---------- Project marquee ---------- */
 
-.project-grid {
-  display: grid;
-  grid-template-columns: repeat(auto-fit, minmax(260px, 1fr));
+.project-marquee {
+  position: relative;
+  overflow-x: auto;
+  overflow-y: hidden;
+  cursor: grab;
+  touch-action: pan-x;
+  overscroll-behavior-x: contain;
+  scrollbar-width: none;
+  -ms-overflow-style: none;
+  mask-image: linear-gradient(
+    90deg,
+    transparent 0,
+    #000 3%,
+    #000 97%,
+    transparent 100%
+  );
+  -webkit-mask-image: linear-gradient(
+    90deg,
+    transparent 0,
+    #000 3%,
+    #000 97%,
+    transparent 100%
+  );
+}
+
+.project-marquee::-webkit-scrollbar {
+  display: none;
+}
+
+.project-marquee:focus-visible {
+  outline: 1px solid rgba(157, 184, 255, 0.55);
+  outline-offset: 6px;
+}
+
+.project-marquee.is-dragging {
+  cursor: grabbing;
+}
+
+.project-track {
+  display: flex;
   gap: 22px;
+  width: max-content;
+  user-select: none;
 }
 
 .project-card {
-  display: flex;
-  flex-direction: column;
-  padding: 28px;
+  position: relative;
+  flex: 0 0 clamp(240px, 27vw, 380px);
+  overflow: hidden;
   border: 1px solid rgba(255, 255, 255, 0.09);
   border-radius: 18px;
-  background: linear-gradient(
-    160deg,
-    rgba(255, 255, 255, 0.045),
-    rgba(255, 255, 255, 0.01)
-  );
+  background: #08080a;
   transition:
-    transform 0.35s ease,
     border-color 0.35s ease,
     box-shadow 0.35s ease;
 }
 
+.project-card img {
+  display: block;
+  width: 100%;
+  aspect-ratio: 3 / 2;
+  object-fit: cover;
+  pointer-events: none;
+  user-select: none;
+  transition:
+    transform 0.6s ease,
+    filter 0.6s ease;
+}
+
 .project-card:hover {
-  transform: translateY(-6px);
   border-color: rgba(157, 184, 255, 0.45);
   box-shadow:
     0 24px 50px rgba(0, 0, 0, 0.5),
-    0 0 0 1px rgba(157, 184, 255, 0.12);
+    0 0 24px rgba(120, 165, 255, 0.18);
 }
 
-.project-card-top {
-  display: flex;
-  align-items: center;
-  justify-content: space-between;
-}
-
-.project-number {
-  font-size: 11px;
-  letter-spacing: 2px;
-  color: #9db8ff;
-}
-
-.project-year {
-  font-size: 11px;
-  letter-spacing: 2px;
-  color: #6f6a62;
-}
-
-.project-category {
-  margin-top: 26px;
-  font-size: 10px;
-  letter-spacing: 1.8px;
-  text-transform: uppercase;
-  color: #8b857c;
-}
-
-.project-title {
-  margin-top: 10px;
-  font-family: 'Cormorant Garamond', serif;
-  font-size: 30px;
-  font-weight: 400;
-  color: #f4f1ea;
-}
-
-.project-description {
-  flex: 1;
-  margin-top: 12px;
-  font-size: 13px;
-  line-height: 1.8;
-  color: #a9a49b;
-}
-
-.project-tags {
-  display: flex;
-  flex-wrap: wrap;
-  gap: 8px;
-  margin-top: 20px;
-}
-
-.project-tags span {
-  padding: 5px 10px;
-  border: 1px solid rgba(255, 255, 255, 0.12);
-  border-radius: 999px;
-  font-size: 10px;
-  letter-spacing: 1px;
-  color: #c9c3b8;
-}
-
-.project-link {
-  display: inline-flex;
-  align-items: center;
-  gap: 10px;
-  margin-top: 22px;
-  font-size: 11px;
-  letter-spacing: 1.4px;
-  color: #d8c9b5;
-}
-
-.project-link span {
-  color: #9db8ff;
-  transition: transform 0.3s ease;
-}
-
-.project-card:hover .project-link span {
-  transform: translate(3px, -3px);
+.project-card:hover img {
+  transform: scale(1.04);
+  filter: brightness(1.08);
 }
 
 /* ---------- About & footer ---------- */
@@ -414,8 +393,8 @@ a {
     padding-top: 100px;
   }
 
-  .project-grid {
-    grid-template-columns: 1fr;
+  .project-card {
+    flex-basis: 74vw;
   }
 
   .footer-bottom {

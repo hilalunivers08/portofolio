@@ -1,5 +1,6 @@
 import { useEffect, useRef } from "react";
 import falcon from "./assets/millenniumfalcon.png";
+import starwars from "./assets/starwars1.png";
 
 type Star = {
   top: string;
@@ -88,8 +89,18 @@ const projects = [
   },
 ];
 
+const MARQUEE_COPIES = 7;
+const MARQUEE_SPEED = 70; // pixels per second
+
+const marqueeProjects = Array.from(
+  { length: MARQUEE_COPIES },
+  () => projects,
+).flat();
+
 function App() {
   const falconRef = useRef<HTMLDivElement>(null);
+  const marqueeRef = useRef<HTMLDivElement>(null);
+  const trackRef = useRef<HTMLDivElement>(null);
 
   useEffect(() => {
     let frame = 0;
@@ -127,6 +138,132 @@ function App() {
       window.removeEventListener("scroll", onScroll);
       window.removeEventListener("resize", onScroll);
       if (frame) window.cancelAnimationFrame(frame);
+    };
+  }, []);
+
+  useEffect(() => {
+    const viewport = marqueeRef.current;
+    const track = trackRef.current;
+    if (!viewport || !track) return;
+
+    const reduceMotion = window.matchMedia("(prefers-reduced-motion: reduce)");
+
+    let copyWidth = 0;
+    let paused = false;
+    let dragging = false;
+    let dragStartX = 0;
+    let dragStartLeft = 0;
+    let frame = 0;
+    let last = performance.now();
+
+    const wrap = (value: number) => {
+      const range = copyWidth * 2;
+      if (range <= 0) return value;
+      return ((value % range) + range) % range;
+    };
+
+    const measure = () => {
+      const card = track.firstElementChild as HTMLElement | null;
+      if (!card) return;
+
+      const gap = parseFloat(getComputedStyle(track).columnGap || "0") || 0;
+      copyWidth = (card.getBoundingClientRect().width + gap) * projects.length;
+      if (copyWidth <= 0) return;
+
+      // Keep the playhead inside the middle copies after resize.
+      viewport.scrollLeft = copyWidth + (viewport.scrollLeft % copyWidth);
+    };
+
+    const tick = (now: number) => {
+      const delta = Math.min(now - last, 100) / 1000;
+      last = now;
+
+      if (!paused && !dragging && copyWidth > 0) {
+        // Decreasing scrollLeft moves the strip to the right.
+        viewport.scrollLeft = wrap(viewport.scrollLeft - MARQUEE_SPEED * delta);
+      }
+
+      frame = window.requestAnimationFrame(tick);
+    };
+
+    const pause = () => {
+      paused = true;
+    };
+
+    const resume = () => {
+      paused = false;
+    };
+
+    const onWheel = (event: WheelEvent) => {
+      if (copyWidth <= 0) return;
+
+      const delta =
+        Math.abs(event.deltaX) > Math.abs(event.deltaY)
+          ? event.deltaX
+          : event.deltaY;
+      if (!delta) return;
+
+      event.preventDefault();
+      viewport.scrollLeft = wrap(viewport.scrollLeft + delta);
+    };
+
+    const onPointerDown = (event: PointerEvent) => {
+      if (event.pointerType !== "mouse" || event.button !== 0) return;
+
+      dragging = true;
+      dragStartX = event.clientX;
+      dragStartLeft = viewport.scrollLeft;
+      viewport.classList.add("is-dragging");
+      viewport.setPointerCapture(event.pointerId);
+    };
+
+    const onPointerMove = (event: PointerEvent) => {
+      if (!dragging) return;
+      viewport.scrollLeft = wrap(dragStartLeft - (event.clientX - dragStartX));
+    };
+
+    const endDrag = (event: PointerEvent) => {
+      if (!dragging) return;
+
+      dragging = false;
+      viewport.classList.remove("is-dragging");
+      if (viewport.hasPointerCapture(event.pointerId)) {
+        viewport.releasePointerCapture(event.pointerId);
+      }
+    };
+
+    const resizeObserver = new ResizeObserver(measure);
+    resizeObserver.observe(track);
+
+    measure();
+
+    viewport.addEventListener("pointerenter", pause);
+    viewport.addEventListener("pointerleave", resume);
+    viewport.addEventListener("focusin", pause);
+    viewport.addEventListener("focusout", resume);
+    viewport.addEventListener("wheel", onWheel, { passive: false });
+    viewport.addEventListener("pointerdown", onPointerDown);
+    viewport.addEventListener("pointermove", onPointerMove);
+    viewport.addEventListener("pointerup", endDrag);
+    viewport.addEventListener("pointercancel", endDrag);
+
+    if (!reduceMotion.matches) {
+      frame = window.requestAnimationFrame(tick);
+    }
+
+    return () => {
+      if (frame) window.cancelAnimationFrame(frame);
+      resizeObserver.disconnect();
+      viewport.removeEventListener("pointerenter", pause);
+      viewport.removeEventListener("pointerleave", resume);
+      viewport.removeEventListener("focusin", pause);
+      viewport.removeEventListener("focusout", resume);
+      viewport.removeEventListener("wheel", onWheel);
+      viewport.removeEventListener("pointerdown", onPointerDown);
+      viewport.removeEventListener("pointermove", onPointerMove);
+      viewport.removeEventListener("pointerup", endDrag);
+      viewport.removeEventListener("pointercancel", endDrag);
+      viewport.classList.remove("is-dragging");
     };
   }, []);
 
@@ -197,29 +334,37 @@ function App() {
             </p>
           </header>
 
-          <div className="project-grid">
-            {projects.map((project) => (
-              <article className="project-card" key={project.number}>
-                <div className="project-card-top">
-                  <span className="project-number">{project.number}</span>
-                  <span className="project-year">{project.year}</span>
-                </div>
+          <div
+            className="project-marquee"
+            ref={marqueeRef}
+            role="region"
+            aria-label="Selected work gallery"
+            tabIndex={0}
+          >
+            <div className="project-track" ref={trackRef}>
+              {marqueeProjects.map((project, index) => {
+                const isClone = index >= projects.length;
 
-                <p className="project-category">{project.category}</p>
-                <h3 className="project-title">{project.title}</h3>
-                <p className="project-description">{project.description}</p>
-
-                <div className="project-tags">
-                  {project.tags.map((tag) => (
-                    <span key={tag}>{tag}</span>
-                  ))}
-                </div>
-
-                <a className="project-link" href="#contact">
-                  View project <span aria-hidden="true">↗</span>
-                </a>
-              </article>
-            ))}
+                return (
+                  <figure
+                    className="project-card"
+                    key={`${project.number}-${index}`}
+                    aria-hidden={isClone || undefined}
+                  >
+                    <img
+                      src={starwars}
+                      alt={
+                        isClone
+                          ? ""
+                          : `${project.title} — ${project.category}`
+                      }
+                      draggable={false}
+                      loading="lazy"
+                    />
+                  </figure>
+                );
+              })}
+            </div>
           </div>
         </section>
 
