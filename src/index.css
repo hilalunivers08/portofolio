@@ -101,13 +101,88 @@ a {
 }
 
 .falcon-slot {
+  position: relative;
   display: flex;
   align-items: center;
   justify-content: center;
 }
 
 .falcon-scroll {
+  position: relative;
   will-change: transform, opacity;
+}
+
+.falcon-bubble {
+  position: absolute;
+  left: 50%;
+  bottom: calc(100% + 24px);
+  z-index: 2;
+  padding: 13px 20px 14px;
+  border: 3px solid #141414;
+  border-radius: 24px 32px 20px 30px / 32px 22px 34px 24px;
+  background-color: #fffdf6;
+  background-image:
+    radial-gradient(rgba(20, 20, 20, 0.14) 1px, transparent 1.3px),
+    linear-gradient(160deg, #ffffff 0%, #f6efdf 100%);
+  background-size:
+    7px 7px,
+    100% 100%;
+  color: #141414;
+  font-size: 14px;
+  font-weight: 600;
+  letter-spacing: 0.3px;
+  line-height: 1.45;
+  text-align: center;
+  white-space: nowrap;
+  filter: drop-shadow(6px 6px 0 #141414);
+  transform: translateX(-50%);
+  rotate: -2.5deg;
+  transform-origin: 50% 100%;
+  opacity: 1;
+  pointer-events: none;
+  transition:
+    opacity 0.3s ease,
+    transform 0.3s ease;
+  animation: bubble-float 4.5s ease-in-out infinite;
+}
+
+.falcon-bubble::before,
+.falcon-bubble::after {
+  content: "";
+  position: absolute;
+  left: 50%;
+  top: 100%;
+  transform: translateX(-50%) rotate(4deg);
+  border-style: solid;
+  border-color: transparent;
+  border-bottom: 0;
+}
+
+.falcon-bubble::before {
+  border-width: 17px 12px 0 8px;
+  border-top-color: #141414;
+}
+
+.falcon-bubble::after {
+  border-width: 12px 8px 0 5px;
+  border-top-color: #fffdf6;
+}
+
+.falcon-bubble.is-hidden {
+  opacity: 0;
+  transform: translateX(-50%) translateY(10px) scale(0.94);
+}
+
+@keyframes bubble-float {
+  0%,
+  100% {
+    translate: 0 0;
+    rotate: -2.5deg;
+  }
+  50% {
+    translate: 0 -7px;
+    rotate: -1.2deg;
+  }
 }
 
 .falcon {
@@ -142,8 +217,7 @@ a {
   max-width: 540px;
 }
 
-.portfolio-eyebrow,
-.section-eyebrow {
+.portfolio-eyebrow {
   font-size: 11px;
   letter-spacing: 2.4px;
   text-transform: uppercase;
@@ -151,8 +225,7 @@ a {
   margin-bottom: 20px;
 }
 
-.portfolio-title,
-.section-title {
+.portfolio-title {
   font-family: 'Cormorant Garamond', serif;
   font-weight: 400;
   letter-spacing: -1px;
@@ -164,8 +237,7 @@ a {
   line-height: 1.04;
 }
 
-.portfolio-title em,
-.section-title em {
+.portfolio-title em {
   color: #b39a7c;
   font-style: italic;
   font-weight: 400;
@@ -177,177 +249,6 @@ a {
   font-size: 14px;
   line-height: 1.9;
   color: #a9a49b;
-}
-
-/* ---------- Portfolio content ---------- */
-
-.portfolio-content {
-  position: relative;
-  z-index: 1;
-  padding-bottom: 40px;
-  background: transparent;
-}
-
-.content-section {
-  padding: 110px 0;
-  border-top: 1px solid rgba(255, 255, 255, 0.08);
-}
-
-.work {
-  border-top: none;
-  padding-top: 130px;
-}
-
-.section-head {
-  display: flex;
-  align-items: flex-end;
-  justify-content: space-between;
-  gap: 40px;
-  margin-bottom: 56px;
-}
-
-.section-title {
-  font-size: clamp(38px, 5vw, 68px);
-  line-height: 1.05;
-}
-
-.section-intro {
-  max-width: 330px;
-  padding-bottom: 8px;
-  font-size: 13px;
-  line-height: 1.85;
-  color: #a9a49b;
-}
-
-/* ---------- Project marquee ---------- */
-
-.project-marquee {
-  position: relative;
-  overflow-x: auto;
-  overflow-y: hidden;
-  cursor: grab;
-  touch-action: pan-x;
-  overscroll-behavior-x: contain;
-  scrollbar-width: none;
-  -ms-overflow-style: none;
-  mask-image: linear-gradient(
-    90deg,
-    transparent 0,
-    #000 3%,
-    #000 97%,
-    transparent 100%
-  );
-  -webkit-mask-image: linear-gradient(
-    90deg,
-    transparent 0,
-    #000 3%,
-    #000 97%,
-    transparent 100%
-  );
-}
-
-.project-marquee::-webkit-scrollbar {
-  display: none;
-}
-
-.project-marquee:focus-visible {
-  outline: 1px solid rgba(157, 184, 255, 0.55);
-  outline-offset: 6px;
-}
-
-.project-marquee.is-dragging {
-  cursor: grabbing;
-}
-
-.project-track {
-  display: flex;
-  gap: 22px;
-  width: max-content;
-  user-select: none;
-}
-
-.project-card {
-  position: relative;
-  flex: 0 0 clamp(240px, 27vw, 380px);
-  overflow: hidden;
-  border: 1px solid rgba(255, 255, 255, 0.09);
-  border-radius: 18px;
-  background: #08080a;
-  transition:
-    border-color 0.35s ease,
-    box-shadow 0.35s ease;
-}
-
-.project-card img {
-  display: block;
-  width: 100%;
-  aspect-ratio: 3 / 2;
-  object-fit: cover;
-  pointer-events: none;
-  user-select: none;
-  transition:
-    transform 0.6s ease,
-    filter 0.6s ease;
-}
-
-.project-card:hover {
-  border-color: rgba(157, 184, 255, 0.45);
-  box-shadow:
-    0 24px 50px rgba(0, 0, 0, 0.5),
-    0 0 24px rgba(120, 165, 255, 0.18);
-}
-
-.project-card:hover img {
-  transform: scale(1.04);
-  filter: brightness(1.08);
-}
-
-/* ---------- About & footer ---------- */
-
-.about-text {
-  max-width: 560px;
-  margin-top: 28px;
-  font-size: 14px;
-  line-height: 1.9;
-  color: #a9a49b;
-}
-
-.site-footer {
-  padding-bottom: 40px;
-}
-
-.contact-link {
-  display: inline-flex;
-  align-items: center;
-  gap: 12px;
-  margin-top: 34px;
-  padding-bottom: 9px;
-  border-bottom: 1px solid #a88b6b;
-  font-size: 14px;
-  letter-spacing: 0.5px;
-  color: #e5d5bd;
-}
-
-.contact-link span {
-  color: #9db8ff;
-  transition: transform 0.3s ease;
-}
-
-.contact-link:hover span {
-  transform: translate(3px, -3px);
-}
-
-.footer-bottom {
-  display: flex;
-  justify-content: space-between;
-  gap: 16px;
-  flex-wrap: wrap;
-  margin-top: 90px;
-  padding-top: 30px;
-  border-top: 1px solid rgba(255, 255, 255, 0.08);
-  font-size: 10px;
-  letter-spacing: 1.6px;
-  color: #81796e;
 }
 
 /* ---------- Responsive ---------- */
@@ -364,6 +265,13 @@ a {
     width: clamp(150px, 46vw, 240px);
   }
 
+  .falcon-bubble {
+    bottom: calc(100% + 18px);
+    padding: 10px 14px 11px;
+    font-size: 11px;
+    filter: drop-shadow(4px 4px 0 #141414);
+  }
+
   .portfolio {
     margin: 0 auto;
   }
@@ -372,33 +280,11 @@ a {
     margin-left: auto;
     margin-right: auto;
   }
-
-  .section-head {
-    flex-direction: column;
-    align-items: flex-start;
-    gap: 18px;
-  }
 }
 
 @media (max-width: 700px) {
   .site-canvas {
     padding: 0 6%;
-  }
-
-  .content-section {
-    padding: 80px 0;
-  }
-
-  .work {
-    padding-top: 100px;
-  }
-
-  .project-card {
-    flex-basis: 74vw;
-  }
-
-  .footer-bottom {
-    font-size: 8px;
   }
 }
 

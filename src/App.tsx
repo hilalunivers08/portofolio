@@ -1,6 +1,5 @@
-import { useEffect, useRef } from "react";
+import { useEffect, useRef, useState } from "react";
 import falcon from "./assets/millenniumfalcon.png";
-import starwars from "./assets/starwars1.png";
 
 type Star = {
   top: string;
@@ -59,51 +58,25 @@ const stars: Star[] = [
   { top: "72%", left: "96%", size: 9, rotate: -20, delay: "1.0s", duration: "4.1s" },
 ];
 
-const projects = [
-  {
-    number: "01",
-    title: "Orbit",
-    category: "Web App",
-    year: "2026",
-    description:
-      "A fast, responsive dashboard that turns complex data into a clear, glanceable experience.",
-    tags: ["React", "TypeScript", "CSS"],
-  },
-  {
-    number: "02",
-    title: "Nebula",
-    category: "Design System",
-    year: "2025",
-    description:
-      "A small component library built to keep interfaces consistent, accessible, and easy to theme.",
-    tags: ["Figma", "Accessibility"],
-  },
-  {
-    number: "03",
-    title: "Signal",
-    category: "Experiment",
-    year: "2025",
-    description:
-      "An exploration of motion and micro-interactions on the web, one tiny animation at a time.",
-    tags: ["Animation", "Canvas"],
-  },
-];
-
-const MARQUEE_COPIES = 7;
-const MARQUEE_SPEED = 70; // pixels per second
-
-const marqueeProjects = Array.from(
-  { length: MARQUEE_COPIES },
-  () => projects,
-).flat();
+const navItems = [{ label: "About", href: "#about" }];
 
 function App() {
   const falconRef = useRef<HTMLDivElement>(null);
-  const marqueeRef = useRef<HTMLDivElement>(null);
-  const trackRef = useRef<HTMLDivElement>(null);
+  const bubbleRef = useRef<HTMLDivElement>(null);
+  const triggerRef = useRef<HTMLButtonElement>(null);
+  const navRef = useRef<HTMLElement>(null);
+  const [navOpen, setNavOpen] = useState(false);
 
   useEffect(() => {
     let frame = 0;
+    let lastScrollY = window.scrollY;
+    let scrollDirection = 0;
+    let scrollDistance = 0;
+    const bubble = bubbleRef.current;
+
+    if (bubble && lastScrollY >= 20) {
+      bubble.classList.add("is-hidden");
+    }
 
     const update = () => {
       frame = 0;
@@ -126,6 +99,29 @@ function App() {
     };
 
     const onScroll = () => {
+      const currentY = window.scrollY;
+      const delta = currentY - lastScrollY;
+      lastScrollY = currentY;
+
+      if (bubble && delta !== 0) {
+        const direction = delta > 0 ? 1 : -1;
+
+        if (direction !== scrollDirection) {
+          scrollDirection = direction;
+          scrollDistance = 0;
+        }
+
+        scrollDistance += Math.abs(delta);
+
+        if (currentY < 20) {
+          bubble.classList.remove("is-hidden");
+          scrollDistance = 0;
+        } else if (scrollDistance > 6) {
+          bubble.classList.toggle("is-hidden", direction > 0);
+          scrollDistance = 0;
+        }
+      }
+
       if (frame) return;
       frame = window.requestAnimationFrame(update);
     };
@@ -142,130 +138,36 @@ function App() {
   }, []);
 
   useEffect(() => {
-    const viewport = marqueeRef.current;
-    const track = trackRef.current;
-    if (!viewport || !track) return;
+    if (!navOpen) return;
 
-    const reduceMotion = window.matchMedia("(prefers-reduced-motion: reduce)");
+    const closeOnOutsideClick = (event: PointerEvent) => {
+      const target = event.target as Node;
 
-    let copyWidth = 0;
-    let paused = false;
-    let dragging = false;
-    let dragStartX = 0;
-    let dragStartLeft = 0;
-    let frame = 0;
-    let last = performance.now();
+      if (navRef.current?.contains(target)) return;
+      if (triggerRef.current?.contains(target)) return;
 
-    const wrap = (value: number) => {
-      const range = copyWidth * 2;
-      if (range <= 0) return value;
-      return ((value % range) + range) % range;
+      setNavOpen(false);
     };
 
-    const measure = () => {
-      const card = track.firstElementChild as HTMLElement | null;
-      if (!card) return;
+    const closeOnEscape = (event: KeyboardEvent) => {
+      if (event.key !== "Escape") return;
 
-      const gap = parseFloat(getComputedStyle(track).columnGap || "0") || 0;
-      copyWidth = (card.getBoundingClientRect().width + gap) * projects.length;
-      if (copyWidth <= 0) return;
-
-      // Keep the playhead inside the middle copies after resize.
-      viewport.scrollLeft = copyWidth + (viewport.scrollLeft % copyWidth);
+      setNavOpen(false);
+      triggerRef.current?.focus();
     };
 
-    const tick = (now: number) => {
-      const delta = Math.min(now - last, 100) / 1000;
-      last = now;
+    const closeOnScroll = () => setNavOpen(false);
 
-      if (!paused && !dragging && copyWidth > 0) {
-        // Decreasing scrollLeft moves the strip to the right.
-        viewport.scrollLeft = wrap(viewport.scrollLeft - MARQUEE_SPEED * delta);
-      }
-
-      frame = window.requestAnimationFrame(tick);
-    };
-
-    const pause = () => {
-      paused = true;
-    };
-
-    const resume = () => {
-      paused = false;
-    };
-
-    const onWheel = (event: WheelEvent) => {
-      if (copyWidth <= 0) return;
-
-      const delta =
-        Math.abs(event.deltaX) > Math.abs(event.deltaY)
-          ? event.deltaX
-          : event.deltaY;
-      if (!delta) return;
-
-      event.preventDefault();
-      viewport.scrollLeft = wrap(viewport.scrollLeft + delta);
-    };
-
-    const onPointerDown = (event: PointerEvent) => {
-      if (event.pointerType !== "mouse" || event.button !== 0) return;
-
-      dragging = true;
-      dragStartX = event.clientX;
-      dragStartLeft = viewport.scrollLeft;
-      viewport.classList.add("is-dragging");
-      viewport.setPointerCapture(event.pointerId);
-    };
-
-    const onPointerMove = (event: PointerEvent) => {
-      if (!dragging) return;
-      viewport.scrollLeft = wrap(dragStartLeft - (event.clientX - dragStartX));
-    };
-
-    const endDrag = (event: PointerEvent) => {
-      if (!dragging) return;
-
-      dragging = false;
-      viewport.classList.remove("is-dragging");
-      if (viewport.hasPointerCapture(event.pointerId)) {
-        viewport.releasePointerCapture(event.pointerId);
-      }
-    };
-
-    const resizeObserver = new ResizeObserver(measure);
-    resizeObserver.observe(track);
-
-    measure();
-
-    viewport.addEventListener("pointerenter", pause);
-    viewport.addEventListener("pointerleave", resume);
-    viewport.addEventListener("focusin", pause);
-    viewport.addEventListener("focusout", resume);
-    viewport.addEventListener("wheel", onWheel, { passive: false });
-    viewport.addEventListener("pointerdown", onPointerDown);
-    viewport.addEventListener("pointermove", onPointerMove);
-    viewport.addEventListener("pointerup", endDrag);
-    viewport.addEventListener("pointercancel", endDrag);
-
-    if (!reduceMotion.matches) {
-      frame = window.requestAnimationFrame(tick);
-    }
+    document.addEventListener("pointerdown", closeOnOutsideClick);
+    document.addEventListener("keydown", closeOnEscape);
+    window.addEventListener("scroll", closeOnScroll, { passive: true });
 
     return () => {
-      if (frame) window.cancelAnimationFrame(frame);
-      resizeObserver.disconnect();
-      viewport.removeEventListener("pointerenter", pause);
-      viewport.removeEventListener("pointerleave", resume);
-      viewport.removeEventListener("focusin", pause);
-      viewport.removeEventListener("focusout", resume);
-      viewport.removeEventListener("wheel", onWheel);
-      viewport.removeEventListener("pointerdown", onPointerDown);
-      viewport.removeEventListener("pointermove", onPointerMove);
-      viewport.removeEventListener("pointerup", endDrag);
-      viewport.removeEventListener("pointercancel", endDrag);
-      viewport.classList.remove("is-dragging");
+      document.removeEventListener("pointerdown", closeOnOutsideClick);
+      document.removeEventListener("keydown", closeOnEscape);
+      window.removeEventListener("scroll", closeOnScroll);
     };
-  }, []);
+  }, [navOpen]);
 
   return (
     <main className="site-canvas">
@@ -293,112 +195,76 @@ function App() {
       <div className="scene">
         <div className="falcon-slot">
           <div className="falcon-scroll" ref={falconRef}>
-            <img
-              className="falcon"
-              src={falcon}
-              alt="Millennium Falcon"
-              draggable={false}
-            />
+            <div className="falcon-bubble" ref={bubbleRef}>
+              Where you headed visitor?
+            </div>
+            <button
+              className="falcon-trigger"
+              ref={triggerRef}
+              type="button"
+              aria-expanded={navOpen}
+              aria-controls="falcon-nav"
+              aria-label={navOpen ? "Close navigation" : "Open navigation"}
+              onClick={() => setNavOpen((open) => !open)}
+            >
+              <img
+                className="falcon"
+                src={falcon}
+                alt="Millennium Falcon"
+                draggable={false}
+              />
+            </button>
           </div>
+
+          {navOpen && (
+            <nav
+              id="falcon-nav"
+              className="falcon-nav"
+              ref={navRef}
+              aria-label="Section navigation"
+            >
+              {navItems.map((item) => (
+                <a
+                  key={item.href}
+                  href={item.href}
+                  onClick={() => setNavOpen(false)}
+                >
+                  {item.label}
+                  <span aria-hidden="true">↓</span>
+                </a>
+              ))}
+            </nav>
+          )}
         </div>
 
         <section className="portfolio">
-          <p className="portfolio-eyebrow">Portfolio — 2026</p>
+          {/* <p className="portfolio-eyebrow">Portfolio — 2026</p> */}
 
           <h1 className="portfolio-title">
             Hi, I&apos;m Hilal.
             <br />
-            <em>I build things for the web.</em>
+            <em>I build things</em>
           </h1>
 
           <p className="portfolio-text">
-            A personal collection of projects, experiments, and ideas shaped by
-            curiosity. This is where I document the things I create and learn.
+           Happinesse is a warm gun
           </p>
         </section>
       </div>
 
-      <div className="portfolio-content">
-        <section className="content-section work" id="work">
-          <header className="section-head">
-            <div>
-              <p className="section-eyebrow">Selected Work</p>
-              <h2 className="section-title">
-                Projects I&apos;ve <em>built.</em>
-              </h2>
-            </div>
-
-            <p className="section-intro">
-              A small collection of projects and experiments — each one a step
-              further into building things that feel good to use.
-            </p>
-          </header>
-
-          <div
-            className="project-marquee"
-            ref={marqueeRef}
-            role="region"
-            aria-label="Selected work gallery"
-            tabIndex={0}
-          >
-            <div className="project-track" ref={trackRef}>
-              {marqueeProjects.map((project, index) => {
-                const isClone = index >= projects.length;
-
-                return (
-                  <figure
-                    className="project-card"
-                    key={`${project.number}-${index}`}
-                    aria-hidden={isClone || undefined}
-                  >
-                    <img
-                      src={starwars}
-                      alt={
-                        isClone
-                          ? ""
-                          : `${project.title} — ${project.category}`
-                      }
-                      draggable={false}
-                      loading="lazy"
-                    />
-                  </figure>
-                );
-              })}
-            </div>
-          </div>
-        </section>
-
-        <section className="content-section about" id="about">
-          <p className="section-eyebrow">About</p>
-          <h2 className="section-title">
-            Curious about technology,
-            <br />
-            <em>driven by ideas.</em>
-          </h2>
-          <p className="about-text">
-            I enjoy exploring technology, building digital experiences, and
-            turning ideas into something useful. This is where I document the
-            things I create and learn along the way.
-          </p>
-        </section>
-
-        <footer className="content-section site-footer" id="contact">
-          <p className="section-eyebrow">Get in touch</p>
-          <h2 className="section-title">
-            Let&apos;s make something <em>meaningful.</em>
-          </h2>
-
-          <a className="contact-link" href="mailto:hello@example.com">
-            hello@example.com <span aria-hidden="true">↗</span>
-          </a>
-
-          <div className="footer-bottom">
-            <span>© 2026 Hilal</span>
-            <span>Designed with intention.</span>
-            <span>End of page</span>
-          </div>
-        </footer>
-      </div>
+      <section className="about-section" id="about">
+        <p className="section-eyebrow">About</p>
+        <h2 className="section-title">
+          Curious about technology,
+          <br />
+          <em>driven by ideas.</em>
+        </h2>
+        <p className="about-text">
+          I enjoy exploring technology, building digital experiences, and
+          turning ideas into something useful. This is where I document the
+          things I create and learn along the way.
+        </p>
+      </section>
     </main>
   );
 }
