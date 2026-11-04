@@ -61,14 +61,28 @@ const stars: Star[] = [
 const navItems = [{ label: "About", href: "#about" }];
 
 function App() {
-  const falconRef = useRef<HTMLDivElement>(null);
   const bubbleRef = useRef<HTMLDivElement>(null);
   const triggerRef = useRef<HTMLButtonElement>(null);
   const navRef = useRef<HTMLElement>(null);
   const [navOpen, setNavOpen] = useState(false);
+  const [introVisible, setIntroVisible] = useState(true);
 
   useEffect(() => {
-    let frame = 0;
+    if (!introVisible) return;
+
+    document.body.style.overflow = "hidden";
+
+    const timer = window.setTimeout(() => {
+      setIntroVisible(false);
+    }, 2000);
+
+    return () => {
+      window.clearTimeout(timer);
+      document.body.style.overflow = "";
+    };
+  }, [introVisible]);
+
+  useEffect(() => {
     let lastScrollY = window.scrollY;
     let scrollDirection = 0;
     let scrollDistance = 0;
@@ -78,62 +92,40 @@ function App() {
       bubble.classList.add("is-hidden");
     }
 
-    const update = () => {
-      frame = 0;
-
-      const el = falconRef.current;
-      if (!el) return;
-
-      const travel = window.innerHeight * 0.7;
-      const progress = Math.min(1, Math.max(0, window.scrollY / travel));
-      const eased = progress * progress * (3 - 2 * progress);
-
-      const x = eased * window.innerWidth * 0.85;
-      const y = eased * window.innerHeight * 1.3;
-      const rotate = -4 + eased * 40;
-      const scale = 1 - eased * 0.35;
-      const opacity = 1 - eased * eased * eased;
-
-      el.style.transform = `translate3d(${x}px, ${y}px, 0) rotate(${rotate}deg) scale(${scale})`;
-      el.style.opacity = `${opacity}`;
-    };
-
     const onScroll = () => {
+      if (!bubble) return;
+
       const currentY = window.scrollY;
       const delta = currentY - lastScrollY;
       lastScrollY = currentY;
 
-      if (bubble && delta !== 0) {
-        const direction = delta > 0 ? 1 : -1;
+      if (delta === 0) return;
 
-        if (direction !== scrollDirection) {
-          scrollDirection = direction;
-          scrollDistance = 0;
-        }
+      const direction = delta > 0 ? 1 : -1;
 
-        scrollDistance += Math.abs(delta);
-
-        if (currentY < 20) {
-          bubble.classList.remove("is-hidden");
-          scrollDistance = 0;
-        } else if (scrollDistance > 6) {
-          bubble.classList.toggle("is-hidden", direction > 0);
-          scrollDistance = 0;
-        }
+      if (direction !== scrollDirection) {
+        scrollDirection = direction;
+        scrollDistance = 0;
       }
 
-      if (frame) return;
-      frame = window.requestAnimationFrame(update);
+      scrollDistance += Math.abs(delta);
+
+      if (currentY < 20) {
+        bubble.classList.remove("is-hidden");
+        scrollDistance = 0;
+        return;
+      }
+
+      if (scrollDistance > 6) {
+        bubble.classList.toggle("is-hidden", direction > 0);
+        scrollDistance = 0;
+      }
     };
 
-    update();
     window.addEventListener("scroll", onScroll, { passive: true });
-    window.addEventListener("resize", onScroll);
 
     return () => {
       window.removeEventListener("scroll", onScroll);
-      window.removeEventListener("resize", onScroll);
-      if (frame) window.cancelAnimationFrame(frame);
     };
   }, []);
 
@@ -171,6 +163,32 @@ function App() {
 
   return (
     <main className="site-canvas">
+      {introVisible && (
+        <div className="intro-overlay" aria-hidden="true">
+          <div className="intro-stars">
+            {stars.map((star, index) => {
+              const dotSize = Math.max(2, Math.round(star.size / 5));
+
+              return (
+                <span
+                  key={index}
+                  className="intro-star"
+                  style={{
+                    top: star.top,
+                    left: star.left,
+                    width: `${dotSize}px`,
+                    height: `${dotSize}px`,
+                  }}
+                />
+              );
+            })}
+          </div>
+          <p className="intro-text">
+            Not so long time ago, in a galaxy quite nearby...
+          </p>
+        </div>
+      )}
+
       <div className="starfield" aria-hidden="true">
         {stars.map((star, index) => {
           const dotSize = Math.max(2, Math.round(star.size / 5));
@@ -194,7 +212,7 @@ function App() {
 
       <div className="scene">
         <div className="falcon-slot">
-          <div className="falcon-scroll" ref={falconRef}>
+          <div className="falcon-scroll">
             <div className="falcon-bubble" ref={bubbleRef}>
               Where you headed visitor?
             </div>
