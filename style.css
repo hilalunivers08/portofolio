@@ -13,6 +13,9 @@
     --primary-text: #ffffff;
     --secondary-text: #111111;
 
+    --primary-shadow: rgba(0, 0, 0, 0.2);
+    --secondary-shadow: rgba(255, 255, 255, 0.2);
+
     --primary-line: rgb(46, 46, 46, 0.4);
     --secondary-line: rgb(221, 221, 221, 0.4);
     
@@ -35,10 +38,28 @@ h1 {
     text-align: center;
 }
 
-.container {
+.row {
     display: grid;
     grid-template-columns: 3fr 1fr;
-    gap: 20px;
+    gap: 0px;
+    width: 100%;
+    align-items: stretch;
+    padding: 0 20px;
+}
+
+.card-one .container,
+.card-two .container {
+    float: left;
+    width: 99%;
+    height: 100%;
+    padding: 10px;
+    box-sizing: border-box;
+    border-radius: 10px ;
+}
+
+.container {
+    background-color: var(--primary-shadow);
+    box-shadow: 2px 2px;
 }
 
 .container > :first-child {
