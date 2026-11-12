@@ -39,7 +39,17 @@ body {
     text-align: center;
 }
 
+.nav-row {
+    display: flex;
+    align-items: center;
+    gap: 16px;
+    width: 77%;
+    margin: 0 auto 60px;
+    border-bottom: 3px solid var(--primary-line);
+}
+
 .navbar {
+    flex: 1;
     display: flex;
     justify-content: left;
     padding: 10px;
@@ -48,7 +58,7 @@ body {
     width: 77%;
     margin: 0 auto 0;
     /*margin-bottom: 60px;*/
-    border-bottom: 3px solid var(--primary-line);
+    /*border-bottom: 3px solid var(--primary-line);*/
     /*border-left-width: 20px;*/
     /*border-width: medium;*/
     /*text-align: center;*/
@@ -59,7 +69,17 @@ body {
     background-color: var(--primary-background);
     text-decoration: none;
     padding-left: 30px;
+}
 
+.theme-toggle {
+    background: none;
+    border: none;
+    /*border: 2px solid var(--primary-text);*/
+    color: var(--primary-text);
+    border-radius: 99px;
+    padding: 6px 12px;
+    font-size: 1rem;
+    cursor: pointer;
 }
 
 .two-column {
@@ -69,6 +89,8 @@ body {
     padding: 10px;
     margin-left: 15%;
     margin-right: 15%;
+
+    /*background: aqua;*/
 }
 
 .col-one,
@@ -90,3 +112,4 @@ body {
     border-radius: 30px;
     overflow: hidden;
 }
+
