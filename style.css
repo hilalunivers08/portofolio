@@ -68,7 +68,6 @@ body {
     border: none;
     color: var(--primary-text);
     padding: 11px 14px;
-    /*font-size: rem;*/
     cursor: pointer;
     transition: 0.5s ease;
     text-transform: uppercase;
@@ -76,6 +75,8 @@ body {
     font-family: "Figtree", sans-serif;
     min-width: 90px;
     text-align: center;
+    
+    /*font-size: rem;*/
     /*border: none;*/
 }
 
