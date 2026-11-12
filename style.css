@@ -28,15 +28,38 @@ body {
 
 
 
-h1 {
+.title h1 {
+    width: 77%;
+    margin: 2% auto 0;
     margin-top: 2%;
     padding-bottom: 1%;
-    /*border-bottom: 3px solid var(--primary-line);*/
+    border-bottom: 3px solid var(--primary-line);
+    border-left-width: 20px;
+    border-width: medium;
+    text-align: center;
+}
+    
+.navbar {
+    display: flex;
+    justify-content: center;
+    padding: 10px;
+    gap: 10px;
+
+    width: 77%;
+    margin: 0 auto 0;
+    margin-bottom: 60px;
+    border-bottom: 3px solid var(--primary-line);
+    border-left-width: 20px;
     border-width: medium;
     text-align: center;
 }
 
-
+.navbar a {
+    color: var(--primary-text);
+    background-color: var(--primary-background);
+    text-decoration: none;
+    
+}
 
 .two-column {
     display: grid;
