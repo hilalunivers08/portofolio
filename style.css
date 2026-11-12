@@ -9,16 +9,20 @@
 
 :root {
     --primary-background: #111111;
-    --secondary-background: #ffffff;
-    --primary-text: #ffffff;
-    --secondary-text: #111111;
-
     --primary-shadow: rgba(0, 0, 0, 0.2);
-    --secondary-shadow: rgba(255, 255, 255, 0.2);
-
+    --primary-text: #ffffff;
     --primary-line: rgb(46, 46, 46, 0.4);
-    --secondary-line: rgb(221, 221, 221, 0.4);
 
+    --secondary-text: #111111;
+    --secondary-background: #ffffff;
+    --secondary-shadow: rgba(255, 255, 255, 0.2);
+    --secondary-line: rgb(221, 221, 221, 0.4);
+}
+
+body[data-theme="light"] {
+    --primary-background: #ffffff;
+    --primary-text: #111111;
+    --primary-line: rgb(221, 221, 221);
 }
 
 body {
@@ -27,6 +31,17 @@ body {
 }
 
 
+
+.theme-toggle,
+.lang-toggle {
+    background: transparent;
+    border: none;
+    color: var(--primary-text);
+    padding: 8px 14px;
+    font-size: 1rem;
+    cursor: pointer;
+    transition: 0.3s ease;
+}
 
 .title h1 {
     width: 77%;
@@ -69,19 +84,7 @@ body {
     background-color: var(--primary-background);
     text-decoration: none;
     padding-left: 30px;
-}
-
-.theme-toggle,
-.lang-toggle {
-    background: none;
-    border: none;
-    /*border: 2px solid var(--primary-text);*/
-    color: var(--primary-text);
-    border-radius: 99px;
-    padding: 6px 12px;
-    font-size: 1rem;
-    cursor: pointer;
-}
+}   
 
 .two-column {
     display: grid;
