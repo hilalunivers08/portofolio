@@ -12,6 +12,9 @@
 }
 
 :root {
+
+    --color-system: #87ceeb;
+    
     --primary-background: #111111;
     --primary-shadow: rgba(0, 0, 0, 0.2);
     --primary-text: #ffffff;
@@ -73,6 +76,11 @@ body {
     font-family: "Figtree", sans-serif;
     min-width: 90px;
     text-align: center;
+    /*border: none;*/
+}
+
+button {
+    background: none;
 }
 
 .title h1 {
@@ -95,6 +103,7 @@ body {
     width: 77%;
     margin: 0 auto 60px;
     background: none;
+    /*border: none;*/
     border-bottom: 3px solid var(--primary-line);
 }
 
@@ -118,11 +127,18 @@ body {
     color: var(--primary-text);
     /*background-color: var(--primary-background);*/
     text-decoration: none;
-    padding-left: 30px;
-    transition: 0.5s ease;
-    font-family: "Figtree", sans-serif;
+    /*padding-left: 30px;*/
+    transition: 0.3s ease;
+    font-family: var(--body-font-family);
+    
+    /*background: tomato;*/
 }
 
+.navbar a:where(:hover, :focus-visible) {
+  background-size: 100% var(--bg-h);
+  background-position-x: left;
+  color: var(--color-system);
+}
 
  /*versi lama*/
 /*.two-column {
@@ -189,6 +205,17 @@ body {
      margin-inline: auto; */
 }
 
+.col-two a {
+  background: linear-gradient(0deg, skyblue, skyblue) no-repeat right bottom / 0 var(--bg-h);
+  transition: background-size 350ms;
+  --bg-h: 100%;
+}
+
+.col-two a:where(:hover, :focus-visible) {
+  background-size: 100% var(--bg-h);
+  background-position-x: left;
+}
+
 .hero-container {
     margin-bottom: 5%;
     border-bottom: 1.9px solid var(--primary-line);
@@ -201,4 +228,6 @@ body {
 .link-text {
     color: var(--primary-text);
     text-decoration: none;
+    font-size: 12.4px;
 }
+
