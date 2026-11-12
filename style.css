@@ -29,7 +29,7 @@
     --header-font-size: 0.875rem;
     --header-font-family: "Figtree", sans-serif;
 
-    --main-title-font-size: clamp(2.5rem, 5vw, 4rem);
+    --main-title-font-size: clamp(2.5rem, 4vw, 3rem);
     --main-title-font-family: "Redaction 50", serif;
 
     --header-one-font-size: clamp(2rem, 4vw, 2.5rem);
@@ -84,7 +84,8 @@ body {
     border-left-width: 20px;
     border-width: medium;
     text-align: center;
-    font-family: "Redaction 50", serif;
+    font-family: var(--main-title-font-family);
+    font-size: var(--main-title-font-size);
 }
 
 .nav-row {
@@ -152,7 +153,7 @@ body {
 .col-one h1{
     margin-top: 8%;
     /*background-color: tomato;*/
-    font-family: "Source Serif 4", serif;
+    font-family: var(--header-one-font-family);
     font-optical-sizing: auto;
     font-weight: 100px;
     font-style: italic;
@@ -162,7 +163,7 @@ body {
 
 .col-one p {
     margin-top: 4%;
-    font-family: "Figtree", sans-serif;
+    font-family: var(--body-font-family);
     font-optical-sizing: auto;
     /*font-weight: <weight>;*/
     font-style: normal;
@@ -171,7 +172,7 @@ body {
 .col-two {
     width: min(14rem, 100%);
     justify-self: end;
-    font-family: "Figtree", sans-serif;
+    font-family: var(--body-font-family);
 
     /* padding-top: 20px; */
 }
@@ -183,9 +184,9 @@ body {
     margin: 0 auto 5%;
     border-radius: 5px;
 
-    /* overflow: hidden; */
-    /* object-fit: cover; */
-    /* margin-inline: auto; */
+     /*overflow: hidden; 
+     object-fit: cover; 
+     margin-inline: auto; */
 }
 
 .hero-container {
@@ -195,4 +196,9 @@ body {
 
 .text-label {
     color: var(--label-text);
+}
+
+.link-text {
+    color: var(--primary-text);
+    text-decoration: none;
 }
