@@ -47,19 +47,20 @@ h1 {
     padding: 0 20px;
 }
 
-.card-one .container,
-.card-two .container {
+
+.card .container {
     float: left;
     width: 99%;
     height: 100%;
     padding: 10px;
     box-sizing: border-box;
-    border-radius: 10px ;
+    border-radius: 15px ;
+    
 }
 
 .container {
     background-color: var(--primary-shadow);
-    box-shadow: 2px 2px;
+    /*box-shadow: 2px 2px;*/
 }
 
 .container > :first-child {
