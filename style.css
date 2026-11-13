@@ -60,6 +60,38 @@ body {
     transition: 0.5s ease;
 }
 
+a,
+button {
+  text-shadow: none;
+}
+
+a,
+button:hover {
+  animation: glow-in 1.5s ease-in-out infinite alternate;
+}
+
+a:not(:hover),
+button:not(:hover) {
+  animation: glow-out 0.8s ease-out forwards;
+}
+
+@keyframes glow-in {
+  from {
+    text-shadow: 0 0 2px #8abaff;
+  }
+  to {
+    text-shadow: 0 0 5px #8abaff, 0 0 12px #4285ff, 0 0 22px #2878ff;
+  }
+}
+
+@keyframes glow-out {
+  from {
+    text-shadow: 0 0 5px #8abaff, 0 0 12px #4285ff, 0 0 22px #2878ff;
+  }
+  to {
+    text-shadow: none;
+  }
+}
 
 
 .theme-toggle,
@@ -232,3 +264,10 @@ body {
     text-decoration: none;
     font-size: 12.4px;
 }
+
+.link-text:where(:hover, :focus-visible) {
+  color: var(--secondary-text);  
+  /*background-size: 100% var(--bg-h);*/
+  /*background-position-x: left;*/
+}
+
