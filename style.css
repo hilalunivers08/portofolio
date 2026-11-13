@@ -14,7 +14,7 @@
 :root {
 
     --color-system: #87ceeb;
-    
+
     --primary-background: #111111;
     --primary-shadow: rgba(0, 0, 0, 0.2);
     --primary-text: #ffffff;
@@ -75,7 +75,7 @@ body {
     font-family: "Figtree", sans-serif;
     min-width: 90px;
     text-align: center;
-    
+
     /*font-size: rem;*/
     /*border: none;*/
 }
@@ -132,7 +132,7 @@ body {
     /*padding-left: 30px;*/
     transition: 0.3s ease;
     font-family: var(--body-font-family);
-    
+
     /*background: tomato;*/
 }
 
@@ -202,8 +202,8 @@ body {
     margin: 0 auto 5%;
     border-radius: 5px;
 
-     /*overflow: hidden; 
-     object-fit: cover; 
+     /*overflow: hidden;
+     object-fit: cover;
      margin-inline: auto; */
 }
 
@@ -232,4 +232,3 @@ body {
     text-decoration: none;
     font-size: 12.4px;
 }
-
