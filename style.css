@@ -237,7 +237,7 @@ button:not(:hover)
 
 .col-one h3 {
     padding-top: 1.3rem;
-    color: skyblue;
+    color: var(--color-system);
     /*background: aqua;*/
 }
 
@@ -325,7 +325,10 @@ button:hover {
     color: var(--primary-text);
     font-family: var(--body-font-family);
     font-size: 10px;
-   
+}
+
+.project-link a:hover {
+    color: var(--color-system);
 }
 
 .project-start,
