@@ -48,6 +48,8 @@
     --body-font-family: "Figtree", sans-serif;
 }
 
+
+
 body[data-theme="light"] {
     --primary-background: #ffffff;
     --primary-text: #111111;
@@ -308,6 +310,10 @@ button:hover {
   /*background-position-x: left;*/
 }
 
+/*.link-text a:hover {
+    animation: glow-out 0.8s ease-out forwards;
+}*/
+
 .project-timeline {
     padding-top: 0.65rem;
 }
@@ -363,11 +369,15 @@ button:hover {
 .project-end span,
 .project-dur span{
     /*background: aqua;*/
+    font-family: var(--body-font-family);
+    font-size: 0.87rem;
 }
 
-/*
-.project-start a,
-.project-dur a,
-.project-end a {
-    justify-content: ;
-}*/
+.project-start time,
+.project-dur time,
+.project-end time{
+    color: var(--primary-text);
+    font-family: var(--body-font-family);
+    font-size: 0.87rem;
+    
+}
