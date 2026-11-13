@@ -217,6 +217,13 @@ button:not(:hover) {
     font-optical-sizing: auto;
     /*font-weight: <weight>;*/
     font-style: normal;
+
+    /*margin-top: 5%;*/
+    /*background: aqua;*/
+
+    /**/
+    padding-bottom: 1.3rem;
+    border-bottom: 1.9px solid var(--primary-line);
 }
 
 .col-two {
@@ -250,8 +257,11 @@ button:not(:hover) {
   background-position-x: left;
 }
 
+
+/**/
+
 .hero-container {
-    margin-bottom: 5%;
+    padding-bottom: 1.3rem;
     border-bottom: 1.9px solid var(--primary-line);
 }
 
@@ -266,8 +276,7 @@ button:not(:hover) {
 }
 
 .link-text:where(:hover, :focus-visible) {
-  color: var(--secondary-text);  
+  color: var(--secondary-text);
   /*background-size: 100% var(--bg-h);*/
   /*background-position-x: left;*/
 }
-
