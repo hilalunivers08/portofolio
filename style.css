@@ -12,7 +12,7 @@
 }
 
 :root {
-    
+
     --color-system: #87ceeb;
     --muted-text: rgba(255, 255, 255, 0.45);
 
@@ -196,10 +196,10 @@ button:not(:hover)
     display: grid;
 
     /*experiment*/
-    
+
     grid-template-columns: minmax(0, 1fr) minmax(14rem, 0fr);
 
-    
+
     gap: clamp(2rem, 5vw, 4rem);
     padding: 10px;
     margin-left: 15%;
@@ -218,7 +218,7 @@ button:not(:hover)
 
     /*hms*/
     /*margin-top: 8%;*/
-    
+
     /*background-color: tomato;*/
     font-family: var(--header-one-font-family);
     font-optical-sizing: auto;
@@ -342,10 +342,10 @@ button:hover {
     /*color: var(--primary-text);*/
     font-family: var(--body-font-family);
     font-size: 10px;
-    
+
     font-size: 0.76rem;
-    
-    color: var(--muted-text);    
+
+    color: var(--muted-text);
 }
 
 .project-link a:hover {
@@ -363,7 +363,7 @@ button:hover {
 .project-end p,
 .project-dur p{
     /*padding-bottom: 1.3rem;*/
-    border-bottom: none; 
+    border-bottom: none;
 }
 
 .project-start,
@@ -376,7 +376,7 @@ button:hover {
     /*padding-top: 2.6rem;*/
     /*background-color: aqua;*/
     /*padding-bottom: 1.3rem;*/
-    
+
     /*border-bottom: 1.9px solid var(--primary-line);*/
 }
 
@@ -395,7 +395,7 @@ button:hover {
     /*color: var(--primary-text);*/
     font-family: var(--body-font-family);
     font-size: 0.76rem;
-    
+
     color: var(--muted-text);
 }
 
