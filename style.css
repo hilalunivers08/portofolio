@@ -212,7 +212,6 @@ button:not(:hover) {
 }
 
 .col-one p {
-    margin-top: 4%;
     font-family: var(--body-font-family);
     font-optical-sizing: auto;
     /*font-weight: <weight>;*/
@@ -222,8 +221,17 @@ button:not(:hover) {
     /*background: aqua;*/
 
     /**/
-    padding-bottom: 1.3rem;
     border-bottom: 1.9px solid var(--primary-line);
+}
+
+.col-one .hero-desc {
+    margin-top: 4%;
+    padding-bottom: 1.3rem;
+}
+
+.col-one h3 {
+    padding-top: 1.3rem;
+    /*background: aqua;*/
 }
 
 .col-two {
@@ -279,4 +287,34 @@ button:not(:hover) {
   color: var(--secondary-text);
   /*background-size: 100% var(--bg-h);*/
   /*background-position-x: left;*/
+}
+
+.project-start {
+    padding-top: 1.3rem;
+}
+
+.project-start p,
+.project-end p{
+    /*padding-bottom: 1.3rem;*/
+    border-bottom: none; 
+}
+
+.project-start,
+.project-end{
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+
+    /*padding-top: 2.6rem;*/
+    /*background-color: aqua;*/
+    /*padding-bottom: 1.3rem;*/
+    
+    /*border-bottom: 1.9px solid var(--primary-line);*/
+}
+
+.project-start h3{
+   /*background-color: aqua;*/
+   font-family: var(--body-font-family);
+   
+   
 }
