@@ -12,7 +12,7 @@
 }
 
 :root {
-
+    
     --color-system: #87ceeb;
 
     --primary-background: #111111;
@@ -65,13 +65,15 @@ button {
   text-shadow: none;
 }
 
-a,
+.navbar a,
 button:hover {
   animation: glow-in 1.5s ease-in-out infinite alternate;
 }
 
-a:not(:hover),
-button:not(:hover) {
+.navbar a:not(:hover),
+button:not(:hover)
+/*.col-two a:not(:hover)*/
+{
   animation: glow-out 0.8s ease-out forwards;
 }
 
@@ -164,7 +166,6 @@ button:not(:hover) {
     /*padding-left: 30px;*/
     transition: 0.3s ease;
     font-family: var(--body-font-family);
-
     /*background: tomato;*/
 }
 
@@ -186,7 +187,12 @@ button:not(:hover) {
 
 .two-column {
     display: grid;
-    grid-template-columns: minmax(0, 1fr) minmax(14rem, 0.7fr);
+
+    /*experiment*/
+    
+    grid-template-columns: minmax(0, 1fr) minmax(14rem, 0fr);
+
+    
     gap: clamp(2rem, 5vw, 4rem);
     padding: 10px;
     margin-left: 15%;
@@ -231,6 +237,7 @@ button:not(:hover) {
 
 .col-one h3 {
     padding-top: 1.3rem;
+    color: skyblue;
     /*background: aqua;*/
 }
 
@@ -258,13 +265,25 @@ button:not(:hover) {
   background: linear-gradient(0deg, skyblue, skyblue) no-repeat right bottom / 0 var(--bg-h);
   transition: background-size 350ms;
   --bg-h: 100%;
+  /*background: tomato;*/
 }
+
+
+.col-two a,
+button:hover {
+  animation: glow-in 1.5s ease-in-out infinite alternate;
+}
+
+.col-two a:not(:hover){
+  animation: glow-out 0.8s ease-out forwards;
+}
+
+
 
 .col-two a:where(:hover, :focus-visible) {
   background-size: 100% var(--bg-h);
   background-position-x: left;
 }
-
 
 /**/
 
@@ -289,18 +308,43 @@ button:not(:hover) {
   /*background-position-x: left;*/
 }
 
-.project-start {
+.project-timeline {
+    padding-top: 0.65rem;
+}
+
+.project-link{
+    display: flex;
+    /*justify-content: space-between;*/
+    gap: 1%;
+    /*font-size: 1px;*/
+    align-items: center;
+}
+
+.project-timeline a{
+    /*text-decoration: none;*/
+    color: var(--primary-text);
+    font-family: var(--body-font-family);
+    font-size: 10px;
+   
+}
+
+.project-start,
+.project-dur,
+.project-end{
     padding-top: 1.3rem;
+    padding-bottom: 0.3rem;
 }
 
 .project-start p,
-.project-end p{
+.project-end p,
+.project-dur p{
     /*padding-bottom: 1.3rem;*/
     border-bottom: none; 
 }
 
 .project-start,
-.project-end{
+.project-dur,
+.project-end {
     display: flex;
     justify-content: space-between;
     align-items: center;
@@ -312,9 +356,15 @@ button:not(:hover) {
     /*border-bottom: 1.9px solid var(--primary-line);*/
 }
 
-.project-start h3{
-   /*background-color: aqua;*/
-   font-family: var(--body-font-family);
-   
-   
+.project-start span,
+.project-end span,
+.project-dur span{
+    /*background: aqua;*/
 }
+
+/*
+.project-start a,
+.project-dur a,
+.project-end a {
+    justify-content: ;
+}*/
